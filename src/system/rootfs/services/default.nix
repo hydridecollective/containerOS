@@ -7,5 +7,6 @@
 {
   imports = [
     ./networking.nix
+    ./whitelabel.nix
   ];
 }

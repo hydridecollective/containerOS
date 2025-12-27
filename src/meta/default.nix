@@ -9,10 +9,17 @@ with lib;
 
 {
   options.hydride.containers = {
-    version = mkOption {
-      type = types.str;
-      default = "latest";
-      description = "containerOS Version";
+    version = {
+      id = mkOption {
+        type = types.str;
+        default = "latest";
+        description = "ID of the current release. Follows semver, separate from NixOS version.";
+      };
+      codename = mkOption {
+        type = types.str;
+        default = "Orca";
+        description = "Codename of the current release.";
+      };
     };
     images = {
       pull = {
@@ -30,7 +37,10 @@ with lib;
   };
 
   config.hydride.containers = {
-    version = "0.1.0";
+    version = {
+      id = "0.1.0";
+      codename = "Orca";
+    };
     images.pull = {
       repository = "https://forge.hydride.dev/infrastructure/containerOS.git";
       revision = "39899b183a3336351dd2156de1daeee6ae4a5b64";

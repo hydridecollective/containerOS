@@ -9,5 +9,6 @@
   imports = [
     ./kernel
     ./user
+    ./services
   ];
 }
