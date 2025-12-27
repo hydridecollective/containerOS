@@ -14,6 +14,7 @@
       self,
       nixpkgs,
       flake-utils,
+      nixos-generators,
       disko,
       ...
     }:
@@ -28,14 +29,6 @@
       nixosConfigurations.default = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = systemModules;
-      };
-
-      packages.x86_64-linux = {
-        iso = nixos-generators.nixosGenerate {
-          system = "x86_64-linux";
-          format = "iso";
-          modules = systemModules;
-        };
       };
     };
 }

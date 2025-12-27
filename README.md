@@ -4,5 +4,5 @@ Nix flakes used for Hydride containerOS.
 
 ## Building
 ```bash
-nix --extra-experimental-features "nix-command flakes" run github:nix-community/nixos-generators --impure -- -f iso --flake .#
+nix --extra-experimental-features "nix-command flakes" build .#iso
 ```
