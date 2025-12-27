@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # usage
 if [ "$#" -ne 1 ]; then
     echo "the hydride containerOS updater" 1>&2
@@ -11,6 +11,25 @@ if [ "$(id -u)" != "0" ]; then
     echo "hcos-update must be run as root." 1>&2
     exit 1
 fi
+
+function run_diff() {
+    UP_TO_DATE_MSG="containerOS is already up to date."
+    CURRENT_HASH=$(git -C /etc/hydride/containerOS rev-parse main)
+    ORIGIN_HASH=$(git -C /etc/hydride/containerOS rev-parse origin/main)
+    if [ "$CURRENT_HASH" != "$ORIGIN_HASH" ]; then
+        # pull date of main and date of origin/main, then compare and check if origin is newer
+        CURRENT_DATE=$(git -C /etc/hydride/containerOS log -1 --format=%ct main)
+        ORIGIN_DATE=$(git -C /etc/hydride/containerOS log -1 --format=%ct origin/main)
+        if [ "$CURRENT_DATE" -gt "$ORIGIN_DATE" ]; then
+            echo "a newer version of containerOS is available."
+            prompt_update
+        else
+            echo $UP_TO_DATE_MSG
+        fi
+    else
+        echo $UP_TO_DATE_MSG
+    fi
+}
 
 function prep() {
     mkdir -p /hcos.old
@@ -69,9 +88,9 @@ function main() {
     trigger_restart
 }
 
-function check() {
+function prompt_update() {
     # prompt for confirmation
-    echo "running hcos-update will download the flake from Forge and update containerOS, regardless of the version installed."
+    echo "running hcos-update will download the flake from Forge and update containerOS."
     echo "your current backup at /hcos.old will be replaced with the current version by continuing."
     read -p "are you sure you want to proceed? [y/N] " response
     if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
@@ -81,3 +100,5 @@ function check() {
         main
     fi
 }
+
+run_diff
