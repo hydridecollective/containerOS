@@ -6,6 +6,6 @@
 
 {
   environment.systemPackages = with pkgs; [
-    (import ../../../bin/hcos-update/pkg.nix)
+    (callPackage ../../../bin/hcos-update/pkg.nix { })
   ];
 }
