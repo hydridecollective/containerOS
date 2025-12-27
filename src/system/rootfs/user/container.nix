@@ -11,6 +11,7 @@
     extraGroups = [
       "podman"
       "wheel"
+      "networkmanager"
     ];
     group = "hydride-containers";
   };

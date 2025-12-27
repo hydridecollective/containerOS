@@ -31,6 +31,9 @@ with lib;
 
   config.hydride.containers = {
     version = "0.1.0";
-    revision = "39899b183a3336351dd2156de1daeee6ae4a5b64";
+    images.pull = {
+      repository = "https://forge.hydride.dev/infrastructure/containerOS.git";
+      revision = "39899b183a3336351dd2156de1daeee6ae4a5b64";
+    };
   };
 }
