@@ -14,6 +14,10 @@
 
   security.sudo = {
     enable = true;
-    groups = [ "wheel" ];
+    extraRules = [
+      {
+        groups = [ "wheel" ];
+      }
+    ];
   };
 }

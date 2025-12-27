@@ -1,8 +1,11 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
+
+with lib;
 
 {
   options.hydride.containers = {

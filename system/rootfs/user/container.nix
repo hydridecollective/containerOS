@@ -13,4 +13,6 @@
       "wheel"
     ];
   };
+
+  users.groups.hydride-containers = { };
 }

@@ -22,7 +22,8 @@
 
   boot.binfmt = {
     emulatedSystems = [ "aarch64-linux" ];
-    preferStaticEmulators = true; 
+    preferStaticEmulators = true;
+  };
 
   environment.systemPackages = with pkgs; [
     podman-compose
