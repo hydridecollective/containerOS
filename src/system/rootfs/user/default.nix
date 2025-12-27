@@ -16,6 +16,12 @@
     enable = true;
     extraRules = [
       {
+        commands = [
+          {
+            command = "ALL";
+            options = [ "NOPASSWD" ];
+          }
+        ];
         groups = [ "wheel" ];
       }
     ];

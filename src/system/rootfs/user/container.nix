@@ -12,6 +12,7 @@
       "podman"
       "wheel"
     ];
+    group = "hydride-containers";
   };
 
   users.groups.hydride-containers = { };
