@@ -11,7 +11,6 @@ with lib;
 
 {
   imports = [
-    ./images.nix
     ./disko.nix
     "${modulesPath}/profiles/qemu-guest.nix"
   ];

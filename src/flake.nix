@@ -30,5 +30,15 @@
         system = "x86_64-linux";
         modules = systemModules;
       };
+
+      nixosConfigurations.live = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [ ./images/live/default.nix ];
+      };
+
+      nixosConfigurations.minimal = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [ ./images/minimal/default.nix ];
+      };
     };
 }
