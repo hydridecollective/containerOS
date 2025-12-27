@@ -1,0 +1,17 @@
+{
+  pkgs ? import <nixpkgs> { },
+}:
+
+pkgs.stdenv.mkDerivation {
+  pname = "hcos-update";
+  version = "0.0.1";
+
+  # If you have a downloaded tarball, you'd use pkgs.fetchurl or similar
+  src = ./.;
+
+  installPhase = ''
+    mkdir -p $out/bin
+    cp bin $out/bin/hcos-update
+    chmod +x $out/bin/hcos-update
+  '';
+}
