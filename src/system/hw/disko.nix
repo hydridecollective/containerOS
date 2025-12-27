@@ -50,7 +50,7 @@ with lib;
                 };
                 "/hydride/containers" = {
                   mountOptions = [ "compress=zstd" ];
-                  mountpoint = "/hydride/cos";
+                  mountpoint = "/hydride/containers";
                 };
               };
             };
