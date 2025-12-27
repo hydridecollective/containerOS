@@ -12,35 +12,72 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-# prompt for confirmation
-echo "running hcos-update will download the flake from Forge and update containerOS, regardless of the version installed."
-read -p "are you sure you want to proceed? [y/N] " response
-if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
-    echo "Aborting update."
-    exit 1
-fi
+function prep() {
+    mkdir -p /hcos.old
+    mkdir -p /tmp/hcos-update
 
-mkdir -p /hcos.old
-mkdir -p /tmp/hcos-update
+    rm -rf /tmp/hcos-update/git
 
-rm -rf /tmp/hcos-update/git
+    echo "[+] backing up current containerOS"
+    cp -R /etc/hydride/containerOS /hcos.old
 
-echo "[+] backing up current containerOS"
-cp -R /etc/hydride/containerOS /hcos.old
+    echo "[+] downloading containerOS from Forge"
+    git clone https://forge.hydride.dev/infrastructure/containerOS.git /tmp/hcos-update/git
+}
 
-echo "[+] downloading containerOS from Forge"
-git clone https://forge.hydride.dev/infrastructure/containerOS.git /tmp/hcos-update/git
+function flake() {
+    cd /tmp/hcos-update/git
 
-cd /tmp/hcos-update/git
+    echo "[+] building latest overlay"
+    nixos-rebuild build --flake /tmp/hcos-update/git#default
 
-echo "[+] building latest overlay"
-nixos-rebuild build --flake /tmp/hcos-update/git#latest
+    echo "[+] switching in-place to latest overlay"
+    nixos-rebuild switch --flake /tmp/hcos-update/git#default
+}
 
-echo "[+] switching to latest overlay"
-nixos-rebuild switch --flake /tmp/hcos-update/git#latest
+function cleanup() {
+    echo "[+] cleaning up"
+    rm -rf /tmp/hcos-update
+}
 
-echo "[+] cleaning up"
-rm -rf /tmp/hcos-update
+function trigger_restart() {
+    # prompt for confirmation
+    echo "a reboot is required to apply any kernel and bootloader updates included with the new overlay."
+    read -p "do you want to restart your system now? [y/N] " response
+    if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+        echo "to update any kernel modules, you will need to reboot."
+        exit 0
+    else
+        echo "[+] triggering reboot"
+        sudo shutdown -r now
+    fi
+}
 
-echo "hydride containerOS has been updated successfully."
-echo "in the event of containerOS fai
+function main() {
+    prep
+    flake
+    cleanup
+    
+    echo "hydride containerOS has been updated successfully."
+    echo ""
+    echo "in the event of containerOS failure, you can restore your previous version by running:"
+    echo ""
+    echo "sudo nixos-rebuild switch --flake /hcos.old#default"
+    echo ""
+    echo "note that /hcos.old is replaced on every successful run of hcos-update."
+
+    trigger_restart
+}
+
+function check() {
+    # prompt for confirmation
+    echo "running hcos-update will download the flake from Forge and update containerOS, regardless of the version installed."
+    echo "your current backup at /hcos.old will be replaced with the current version by continuing."
+    read -p "are you sure you want to proceed? [y/N] " response
+    if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+        echo "aborting"
+        exit 1
+    else
+        main
+    fi
+}
