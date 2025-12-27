@@ -1,0 +1,46 @@
+#!/bin/sh
+# usage
+if [ "$#" -ne 1 ]; then
+    echo "the hydride containerOS updater" 1>&2
+    echo "usage: hcos-update" 1>&2
+    exit 1
+fi
+
+# check if root
+if [ "$(id -u)" != "0" ]; then
+    echo "hcos-update must be run as root." 1>&2
+    exit 1
+fi
+
+# prompt for confirmation
+echo "running hcos-update will download the flake from Forge and update containerOS, regardless of the version installed."
+read -p "are you sure you want to proceed? [y/N] " response
+if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
+    echo "Aborting update."
+    exit 1
+fi
+
+mkdir -p /hcos.old
+mkdir -p /tmp/hcos-update
+
+rm -rf /tmp/hcos-update/git
+
+echo "[+] backing up current containerOS"
+cp -R /etc/hydride/containerOS /hcos.old
+
+echo "[+] downloading containerOS from Forge"
+git clone https://forge.hydride.dev/infrastructure/containerOS.git /tmp/hcos-update/git
+
+cd /tmp/hcos-update/git
+
+echo "[+] building latest overlay"
+nixos-rebuild build --flake /tmp/hcos-update/git#latest
+
+echo "[+] switching to latest overlay"
+nixos-rebuild switch --flake /tmp/hcos-update/git#latest
+
+echo "[+] cleaning up"
+rm -rf /tmp/hcos-update
+
+echo "hydride containerOS has been updated successfully."
+echo "in the event of containerOS fai
