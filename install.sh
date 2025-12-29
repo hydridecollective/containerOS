@@ -57,9 +57,7 @@ function wipe_disks() {
     umount /mnt/hydride
     umount /mnt/hydride/os-meta
     umount /mnt/hydride/containers
-    echo "wiping disks"
-    mkfs.ext4 /dev/$ROOTFS
-    mkfs.ext4 /dev/$HYDRIDE
+    echo "wiping disk partitions"
     dd if=/dev/zero of=/dev/$ROOTFS bs=4M count=1
     dd if=/dev/zero of=/dev/$HYDRIDE bs=4M count=1
 }
