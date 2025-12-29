@@ -60,6 +60,7 @@ function wipe_disks() {
     echo "wiping disk partitions"
     dd if=/dev/zero of=/dev/$ROOTFS bs=4M count=1
     dd if=/dev/zero of=/dev/$HYDRIDE bs=4M count=1
+    sleep 2 
     mkfs.ext4 /dev/$ROOTFS
     mkfs.ext4 /dev/$HYDRIDE
 }
