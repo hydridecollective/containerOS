@@ -45,7 +45,8 @@ function update_preflight_mountpoints() {
     
     # FAIL if any of the following are not mountpoints using btrfs subvolumes
     for mountpoint in "${MOUNTPOINTS[@]}"; do
-        if ! btrfs subvolume show "$$mountpoint" > /dev/null 2>&1; then
+        FAILCODE=$(btrfs subvolume show "$$mountpoint" > /dev/null 2>&1; echo $?)
+        if [ "$FAILCODE" != "0" ]; then
             echo "[-] failed preflight check: improperly configured filesystem" 1>&2
             echo "at least one required mountpoint is not a btrfs subvolume: $mountpoint" 1>&2
             echo ""
