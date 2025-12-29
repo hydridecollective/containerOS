@@ -1,0 +1,14 @@
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash
+#! nix-shell -p bash git
+# check if /hydride/os-meta/hcos exists
+
+if [ -d /hydride/os-meta/hcos ]; then
+    echo "/hydride/os-meta/hcos has already been generated."
+    exit 0
+fi
+
+# clone repository
+git clone https://forge.hydride.dev/infrastructure/containerOS.git /hydride/os-meta/hcos
+echo "/hydride/os-meta/hcos has been generated."
+exit 0
