@@ -33,14 +33,14 @@ with lib;
               type = "btrfs";
               extraArgs = [ "-f" ];
               subvolumes = {
-                "/rootfs" = {
+                "@" = {
                   mountpoint = "/";
                 };
-                "/home" = {
+                "@home" = {
                   mountOptions = [ "compress=zstd" ];
                   mountpoint = "/home";
                 };
-                "/nix" = {
+                "@nix" = {
                   mountOptions = [ "compress=zstd" ];
                   mountpoint = "/nix";
                 };
@@ -62,15 +62,15 @@ with lib;
               type = "btrfs";
               extraArgs = [ "-f" ];
               subvolumes = {
-                "/hydride" = {
+                "@hydride" = {
                   mountOptions = [ "compress=zstd" ];
                   mountpoint = "/hydride";
                 };
-                "/hydride/os-meta" = {
+                "@hydride/os-meta" = {
                   mountOptions = [ "compress=zstd" ];
                   mountpoint = "/hydride/os-meta";
                 };
-                "/hydride/containers" = {
+                "@hydride/containers" = {
                   mountOptions = [ "compress=zstd" ];
                   mountpoint = "/hydride/containers";
                 };

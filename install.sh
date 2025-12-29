@@ -17,6 +17,19 @@ function partition_chooser() {
     lsblk -n -l -d -o NAME,SIZE | gum choose --header "select a device" | cut -d' ' -f1
 }
 
+function chroot_init() {
+    ROOTFS_MOUNT=$(lsblk -J "/dev/$ROOTFS" | jq -r --argjson part "2" '.blockdevices[0].children[1].name')
+    HYDRIDE_MOUNT=$(lsblk -J "/dev/$HYDRIDE" | jq -r --argjson part "2" '.blockdevices[0].children[0].name')
+
+    # mount partitions
+    mount -o subvol=@ /dev/$ROOTFS_MOUNT /mnt
+    mount -o subvol=@home /dev/$ROOTFS_MOUNT /mnt/home
+    mount -o subvol=@nix /dev/$ROOTFS_MOUNT /mnt/nix
+    mount -o subvol=@hydride /dev/$HYDRIDE_MOUNT /mnt/hydride
+    mount -o subvol=@hydride/os-meta /dev/$HYDRIDE_MOUNT /mnt/hydride/os-meta
+    mount -o subvol=@hydride/containers /dev/$HYDRIDE_MOUNT /mnt/hydride/containers
+}
+
 function install_layout() {
     echo "$(gum style --foreground "10" --bold "/ (rootfs)"): root disk for containerOS"
     ROOTFS=$(partition_chooser)
@@ -64,8 +77,7 @@ function clean_install() {
 
     # run installation
     disko-install --mode format --flake /tmp/hcos/src#default --disk "rootfs" "/dev/$ROOTFS" --disk "hydride" "/dev/$HYDRIDE"
-    nixos-install --no-channel-copy --no-root-password --flake /tmp/hcos/src#default
-
+    chroot_init
 }
 
 function mainMenu() {
