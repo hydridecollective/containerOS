@@ -5,7 +5,7 @@
 }:
 {
   users.users."hydride-containers" = {
-    isSystemUser = true;
+    isSystemUser = false;
     home = "/hydride/containers";
     createHome = true;
     extraGroups = [
@@ -14,7 +14,12 @@
       "networkmanager"
     ];
     group = "hydride-containers";
+    shell = pkgs.zsh;
   };
 
   users.groups.hydride-containers = { };
+
+  environment.systemPackages = with pkgs; [
+    zsh
+  ];
 }

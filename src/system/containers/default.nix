@@ -7,6 +7,7 @@
 {
   imports = [
     ./storage.nix
+    ./systemd.nix
     ./interface
   ];
 
@@ -26,6 +27,8 @@
     ];
     preferStaticEmulators = true;
   };
+
+  users.users."hydride-containers".linger = true;
 
   environment.systemPackages = with pkgs; [
     podman-compose
