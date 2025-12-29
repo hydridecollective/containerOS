@@ -50,6 +50,12 @@ function current_layout() {
     echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): $HYDRIDE"
 }
 
+function wipe_disks() {
+    echo "wiping disks"
+    wipefs -a /dev/$ROOTFS
+    wipefs -a /dev/$HYDRIDE
+}
+
 function clean_install() {
     install_layout
 
@@ -74,6 +80,10 @@ function clean_install() {
     fi
 
     clear
+
+    # wipe disks
+    echo "wiping disks"
+    wipe_disks
 
     # run installation
     disko-install --mode format --flake /tmp/hcos/src#default --disk "rootfs" "/dev/$ROOTFS" --disk "hydride" "/dev/$HYDRIDE"
