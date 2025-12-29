@@ -51,6 +51,12 @@ function current_layout() {
 }
 
 function wipe_disks() {
+    umount /mnt
+    umount /mnt/home
+    umount /mnt/nix
+    umount /mnt/hydride
+    umount /mnt/hydride/os-meta
+    umount /mnt/hydride/containers
     echo "wiping disks"
     wipefs -a /dev/$ROOTFS
     wipefs -a /dev/$HYDRIDE
