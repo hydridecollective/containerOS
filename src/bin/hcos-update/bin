@@ -1,22 +1,82 @@
-#!/bin/bash
+#!/usr/bin/env nix-shell
+#! nix-shell -i bash
 # usage
+
+OSRELEASE_DISTROID=$(cat /etc/os-release | grep ^ID= | cut -d= -f2 | tr -d '"')
+CONTAINEROS_VERSION=$(cat /etc/os-release | grep ^CONTAINEROS_VERSION= | cut -d= -f2 | tr -d '"')
+VENDOR_CONFIG_URL=$(cat /etc/os-release | grep ^HOME_URL= | cut -d= -f2 | tr -d '"')
+
+CONFIG_DIR="/hydride/os-meta/hcos"
+OLD_CONFIG_DIR="/hydride/os-meta/hcos.old"
+
+# check if release is hcos.
+# while compatible with nixos, this is necessary to ensure a uniform partition layout.
+
+if [ "$OSRELEASE_DISTROID" != "hcos" ]; then
+    echo "this tool is not compatible with your distribution." 1>&2
+    echo "if you rebased from a nixos configuration, please reinstall using the hcos-install tool." 1>&2
+    exit 1001
+fi
+
 function usage() {
     echo "the hydride containerOS updater" 1>&2
     echo "usage: hcos-update [update]" 1>&2
-    exit 1
+    exit 999
 };
 
+function update_preflight_root() {
+    # check if root
+    if [ "$(id -u)" != "0" ]; then
+        echo "[-] failed preflight check: hcos-update must be run as root." 1>&2
+        exit 1000
+    fi
+};
+
+function update_preflight_mountpoints() {
+    # list of mountpoints
+    MOUNTPOINTS=(
+        "/"
+        "/boot"
+        "/home"
+        "/nix/store"
+        "/hydride"
+    )
+    
+    # FAIL if any of the following are not mountpoints using btrfs subvolumes
+    for mountpoint in "${MOUNTPOINTS[@]}"; do
+        if ! btrfs subvolume show "$$mountpoint" > /dev/null 2>&1; then
+            echo "[-] failed preflight check: improperly configured filesystem" 1>&2
+            echo "at least one required mountpoint is not a btrfs subvolume: $mountpoint" 1>&2
+            echo ""
+            echo "if this system was installed properly, this was likely caused by a change to the essential partition layout." 1>&2
+            echo "please reinstall containerOS using hcos-install from an installer image." 1>&2
+            exit 1002
+        fi
+    done
+};
+
+function update_preflight() {
+    update_preflight_root
+    update_preflight_mountpoints
+}
+
 function run_diff() {
-    git -C /etc/hydride/containerOS fetch
+    git -C $CONFIG_DIR fetch
+
     UP_TO_DATE_MSG="containerOS is already up to date."
-    CURRENT_HASH=$(git -C /etc/hydride/containerOS rev-parse HEAD)
-    ORIGIN_HASH=$(git -C /etc/hydride/containerOS rev-parse origin/main)
+    CURRENT_HASH=$(git -C $CONFIG_DIR rev-parse HEAD)
+    CURRENT_HASH_SHORT=$(git -C $CONFIG_DIR rev-parse --short HEAD)
+    ORIGIN_HASH=$(git -C $CONFIG_DIR rev-parse origin/main)
+    ORIGIN_HASH_SHORT=$(git -C $CONFIG_DIR rev-parse --short origin/main)
+
     if [ "$CURRENT_HASH" != "$ORIGIN_HASH" ]; then
         # pull date of main and date of origin/main, then compare and check if origin is newer
-        CURRENT_DATE=$(git -C /etc/hydride/containerOS log -1 --format=%ct HEAD)
-        ORIGIN_DATE=$(git -C /etc/hydride/containerOS log -1 --format=%ct origin/main)
+        CURRENT_DATE=$(git -C $CONFIG_DIR log -1 --format=%ct HEAD)
+        ORIGIN_DATE=$(git -C $CONFIG_DIR log -1 --format=%ct origin/main)
         if [ "$CURRENT_DATE" -lt "$ORIGIN_DATE" ]; then
             echo "a newer version of containerOS is available."
+            echo "installed rev: $CURRENT_HASH_SHORT"
+            echo "newest rev: $ORIGIN_HASH_SHORT"
             prompt_update
         else
             echo $UP_TO_DATE_MSG
@@ -27,16 +87,17 @@ function run_diff() {
 }
 
 function prep() {
-    mkdir -p /hcos.old
+    mkdir -p $OLD_CONFIG_DIR
     mkdir -p /tmp/hcos-update
 
     rm -rf /tmp/hcos-update/git
 
     echo "[+] backing up current containerOS"
-    cp -R /etc/hydride/containerOS /hcos.old
+    rm -rf $OLD_CONFIG_DIR
+    cp -R $CONFIG_DIR $OLD_CONFIG_DIR
 
     echo "[+] downloading containerOS from Forge"
-    git clone https://forge.hydride.dev/infrastructure/containerOS.git /tmp/hcos-update/git
+    git clone $VENDOR_CONFIG_URL /tmp/hcos-update/git
 }
 
 function flake() {
@@ -75,17 +136,19 @@ function main() {
     echo ""
     echo "in the event of containerOS failure, you can restore your previous version by running:"
     echo ""
-    echo "sudo nixos-rebuild switch --flake /hcos.old/src#default"
+    echo "sudo nixos-rebuild switch --flake $OLD_CONFIG_DIR/src#default"
     echo ""
-    echo "note that /hcos.old is replaced on every successful run of hcos-update."
+    echo "note that $OLD_CONFIG_DIR is replaced on every successful run of hcos-update."
 
     trigger_restart
 }
 
 function prompt_update() {
     # prompt for confirmation
-    echo "running hcos-update will download the flake from Forge and update containerOS."
-    echo "your current backup at /hcos.old will be replaced with the current version by continuing."
+    echo "running hcos-update will download the newest version of containerOS from Hydride Forge and build a new overlay for it."
+    echo "a reboot is required to apply the new overlay."
+    echo ""
+    echo "your current backup at $OLD_CONFIG_DIR will be replaced with the current version by continuing."
     read -p "are you sure you want to proceed? [y/N] " response
     if [[ ! "$response" =~ ^([yY][eE][sS]|[yY])+$ ]]; then
         echo "aborting"
@@ -96,14 +159,10 @@ function prompt_update() {
 }
 
 if [ "$1" == "update" ]; then
-    # check if root
-    if [ "$(id -u)" != "0" ]; then
-        echo "hcos-update must be run as root." 1>&2
-        exit 1
-    fi
+    update_preflight
 
-    # check if --force is passed
-    if [ "$2" == "--force" ]; then
+    # check if --force or -f is passed
+    if [ "$2" == "--force" ] || [ "$2" == "-f" ]; then
         prompt_update
     else
         run_diff

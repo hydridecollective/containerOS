@@ -11,7 +11,7 @@ with lib;
 
 {
   disko.devices = {
-    disk.disk1 = {
+    disk.rootfs = {
       type = "disk";
       device = mkDefault "/dev/sda";
       content = {
@@ -27,7 +27,7 @@ with lib;
               mountOptions = [ "umask=0077" ];
             };
           };
-          ROOT = {
+          ROOTFS = {
             size = "100%";
             content = {
               type = "btrfs";
@@ -44,9 +44,31 @@ with lib;
                   mountOptions = [ "compress=zstd" ];
                   mountpoint = "/nix";
                 };
+              };
+            };
+          };
+        };
+      };
+    };
+    disk.hydride = {
+      type = "disk";
+      device = mkDefault "/dev/sdb";
+      content = {
+        type = "gpt";
+        partitions = {
+          HYDRIDE = {
+            size = "100%";
+            content = {
+              type = "btrfs";
+              extraArgs = [ "-f" ];
+              subvolumes = {
                 "/hydride" = {
                   mountOptions = [ "compress=zstd" ];
                   mountpoint = "/hydride";
+                };
+                "/hydride/os-meta" = {
+                  mountOptions = [ "compress=zstd" ];
+                  mountpoint = "/hydride/os-meta";
                 };
                 "/hydride/containers" = {
                   mountOptions = [ "compress=zstd" ];
