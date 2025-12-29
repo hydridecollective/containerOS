@@ -14,17 +14,16 @@ with lib;
 
   # ssh
   services.openssh = {
-    enable = mkDefault false;
-    settings = mkDefault {
-      PermitRootLogin = mkDefault "no";
-      PasswordAuthentication = mkDefault "no";
-      KbdInteractiveAuthentication = mkDefault "no";
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = "no";
+      KbdInteractiveAuthentication = "no";
     };
   };
 
-  services.fail2ban = mkDefault {
-    enable = mkDefault true;
-    maxretry = mkDefault 5;
-    bantime = mkDefault "24h";
+  services.fail2ban = {
+    enable = true;
+    maxretry = 5;
+    bantime = "24h";
   };
 }
