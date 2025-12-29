@@ -10,16 +10,43 @@ fi
 
 function partition_chooser() {
     RAW_DEVICE_LIST=$(lsblk -n -l -d -o NAME)
-    lsblk -n -l -d -o NAME,SIZE | gum choose --header "select a device"
+    lsblk -n -l -d -o NAME,SIZE | gum choose --header "select a device" | cut -d' ' -f1
+}
+
+function install_layout() {
+    echo "$(gum style --foreground "10" --bold "/ (rootfs)"): root disk for containerOS"
+    ROOTFS=$(partition_chooser)
+    echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): data disk"
+    HYDRIDE=$(partition_chooser)
+
+    echo "selected options:"
+    echo "$(gum style --foreground "10" --bold "/ (rootfs)"): $ROOTFS"
+    echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): $HYDRIDE"
 }
 
 function clean_install() {
-    echo "$(gum style --foreground "57" --bold "ROOTFS"): root disk for containerOS"
-    ROOTFS=$(partition_chooser)
-    gum style --foreground "57" --bold "HYDRIDE: data disk"
-    HYDRIDE=$(partition_chooser)
+    install_layout
 
-    echo $ROOTFS $HYDRIDE
+    CONFIRM_LAYOUT=$(gum confirm "confirm layout?"; echo $?)
+
+    # check if status code was false (1)
+    if [ "$CONFIRM_LAYOUT" == "1" ]; then
+        clean_install
+    fi
+
+    echo "are you sure you want to continue with this installation?"
+    echo "$(gum style --foreground "10" --bold "/ (rootfs)"): $ROOTFS"
+    echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): $HYDRIDE"
+    echo -e "\e[31mthis will delete EVERYTHING from the above selected devices!\e[0m"
+    
+    CONFIRM_INSTALL=$(gum confirm "proceed with installation?"; echo $?)
+    
+    if [ "$CONFIRM_INSTALL" == "1" ]; then
+        echo "aborting" 1>&2
+        exit 1
+    fi
+    
+    echo $ROOTFS $HYDRIDE $CONFIRM_LAYOUT $CONFIRM_INSTALL
 }
 
 function mainMenu() {
