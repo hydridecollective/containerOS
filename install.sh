@@ -63,7 +63,7 @@ function clean_install() {
     clear
 
     # run installation
-    disko-install --mode format --flake /tmp/hcos/src#default --disk "rootfs" "$ROOTFS" --disk "hydride" "$HYDRIDE"
+    disko-install --mode format --flake /tmp/hcos/src#default --disk "rootfs" "/dev/$ROOTFS" --disk "hydride" "/dev/$HYDRIDE"
     nixos-install --no-channel-copy --no-root-password --flake /tmp/hcos/src#default
 
 }
