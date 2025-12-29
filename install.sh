@@ -1,12 +1,16 @@
 #!/usr/bin/env nix-shell
 #! nix-shell -i bash
-#! nix-shell -p bash git gum
+#! nix-shell -p bash git gum disko
 
 # root check
 if [ "$(id -u)" != "0" ]; then
     echo "hcos-install must be run as root." 1>&2
     exit 1
 fi
+
+# clone repository
+rm -rf /tmp/hcos
+git clone https://forge.hydride.dev/infrastructure/containerOS.git /tmp/hcos
 
 function partition_chooser() {
     RAW_DEVICE_LIST=$(lsblk -n -l -d -o NAME)
@@ -19,7 +23,16 @@ function install_layout() {
     echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): data disk"
     HYDRIDE=$(partition_chooser)
 
+    # check if both partitions were selected
+    if [ "$ROOTFS" == "" ] || [ "$HYDRIDE" == "" ]; then
+        install_layout
+    fi
+
     echo "selected options:"
+    current_layout
+}
+
+function current_layout() {
     echo "$(gum style --foreground "10" --bold "/ (rootfs)"): $ROOTFS"
     echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): $HYDRIDE"
 }
@@ -35,9 +48,8 @@ function clean_install() {
     fi
 
     echo ""
-    echo "are you sure you want to continue with this installation?"
-    echo "$(gum style --foreground "10" --bold "/ (rootfs)"): $ROOTFS"
-    echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): $HYDRIDE"
+    echo "are you sure you want to continue with this installation using the following layout?"
+    current_layout
     echo -e "\e[31mthis will delete EVERYTHING from the above selected devices!\e[0m"
     echo ""
     
@@ -45,10 +57,15 @@ function clean_install() {
     
     if [ "$CONFIRM_INSTALL" == "1" ]; then
         echo "aborting" 1>&2
-        mainMenu
+        welcome
     fi
-    
-    echo $ROOTFS $HYDRIDE $CONFIRM_LAYOUT $CONFIRM_INSTALL
+
+    clear
+
+    # run installation
+    disko-install --mode format --flake /tmp/hcos/src#default --disk "rootfs" "$ROOTFS" --disk "hydride" "$HYDRIDE"
+    nixos-install --no-channel-copy --no-root-password --flake /tmp/hcos/src#default
+
 }
 
 function mainMenu() {
