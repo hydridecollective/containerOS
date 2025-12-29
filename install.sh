@@ -3,7 +3,7 @@
 #! nix-shell -p bash git gum
 
 # root check
-if [ "$(id -u)" = "0" ]; then
+if [ "$(id -u)" != "0" ]; then
     echo "hcos-install must be run as root." 1>&2
     exit 1
 fi
