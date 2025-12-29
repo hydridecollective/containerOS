@@ -98,6 +98,7 @@ function clean_install() {
     chroot_init
     nixos-enter --root /mnt --command "echo root:root | chpasswd root"
     nixos-enter --root /mnt --command "passwd -e root"
+    git clone https://forge.hydride.dev/infrastructure/containerOS.git /mnt/hydride/os-meta/hcos
     echo "containerOS installation complete. the default root password is 'root' - you will be prompted to change it on next login."
     
     CONFIRM_CHROOT=$(gum confirm "chroot into containerOS installation?"; echo $?)
