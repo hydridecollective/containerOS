@@ -1,6 +1,4 @@
-#!/usr/bin/env nix-shell
-#!/usr/bin/env nix-shell -i bash
-#!/usr/bin/env nix-shell -p bash git
+#!/bin/bash
 # check if /hydride/os-meta/hcos exists
 
 if [ -d /hydride/os-meta/hcos ]; then
