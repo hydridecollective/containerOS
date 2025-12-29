@@ -78,6 +78,17 @@ function clean_install() {
     # run installation
     disko-install --mode format --flake /tmp/hcos/src#default --disk "rootfs" "/dev/$ROOTFS" --disk "hydride" "/dev/$HYDRIDE"
     chroot_init
+    nixos-enter --root /mnt --command "echo root:root | chpasswd root"
+    nixos-enter --root /mnt --command "passwd -e root"
+    echo "containerOS installation complete. the default root password is 'root' - you will be prompted to change it on next login."
+    
+    CONFIRM_CHROOT=$(gum confirm "chroot into containerOS installation?"; echo $?)
+
+    if [ "$CONFIRM_CHROOT" == "0" ]; then
+        nixos-enter --root /mnt
+    else
+        exit 0
+    fi
 }
 
 function mainMenu() {
@@ -101,9 +112,5 @@ function welcome() {
         exit 2
     fi
 }
-
-#git clone https://forge.hydride.dev/infrastructure/containerOS.git ~/flake
-#sudo disko --mode disko --flake ~/flake/src#default
-#sudo nixos-install --no-channel-copy --no-root-password --flake ~/flake/src#default
 
 welcome
