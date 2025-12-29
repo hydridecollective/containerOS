@@ -7,7 +7,7 @@
 {
   systemd.services.hcos-generate-config = {
     script = ''
-      ${pkgs.hcos-generate}/bin/hcos-generate
+      ${(callPackage ../../../bin/hcos-generate/pkg.nix { })}/bin/hcos-generate
     '';
     wantedBy = [ "multi-user.target" ];
   };
