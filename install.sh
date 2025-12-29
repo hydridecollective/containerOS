@@ -34,10 +34,12 @@ function clean_install() {
         clean_install
     fi
 
+    echo ""
     echo "are you sure you want to continue with this installation?"
     echo "$(gum style --foreground "10" --bold "/ (rootfs)"): $ROOTFS"
     echo "$(gum style --foreground "57" --bold "/hydride (hydride)"): $HYDRIDE"
     echo -e "\e[31mthis will delete EVERYTHING from the above selected devices!\e[0m"
+    echo ""
     
     CONFIRM_INSTALL=$(gum confirm "proceed with installation?"; echo $?)
     
@@ -54,6 +56,7 @@ function mainMenu() {
 }
 
 function welcome() {
+    clear
     gum style \
 	--foreground "57" --border-foreground "57" --border double \
 	--align center --width 50 --margin "1 2" --padding "2 4" \
