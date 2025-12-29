@@ -58,8 +58,10 @@ function wipe_disks() {
     umount /mnt/hydride/os-meta
     umount /mnt/hydride/containers
     echo "wiping disks"
-    wipefs -a /dev/$ROOTFS
-    wipefs -a /dev/$HYDRIDE
+    mkfs.ext4 /dev/$ROOTFS
+    mkfs.ext4 /dev/$HYDRIDE
+    dd if=/dev/zero of=/dev/$ROOTFS bs=4M count=1
+    dd if=/dev/zero of=/dev/$HYDRIDE bs=4M count=1
 }
 
 function clean_install() {
