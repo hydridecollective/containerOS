@@ -22,7 +22,7 @@ with lib;
             size = "500M";
             content = {
               type = "filesystem";
-              format = "fat32";
+              format = "vfat";
               mountpoint = "/boot";
               mountOptions = [ "umask=0077" ];
             };
