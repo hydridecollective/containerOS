@@ -1,26 +1,21 @@
 #!/bin/bash
 # usage
-if [ "$#" -ne 1 ]; then
+function usage() {
     echo "the hydride containerOS updater" 1>&2
-    echo "usage: hcos-update" 1>&2
+    echo "usage: hcos-update [update]" 1>&2
     exit 1
-fi
-
-# check if root
-if [ "$(id -u)" != "0" ]; then
-    echo "hcos-update must be run as root." 1>&2
-    exit 1
-fi
+};
 
 function run_diff() {
+    git -C /etc/hydride/containerOS fetch
     UP_TO_DATE_MSG="containerOS is already up to date."
-    CURRENT_HASH=$(git -C /etc/hydride/containerOS rev-parse main)
+    CURRENT_HASH=$(git -C /etc/hydride/containerOS rev-parse HEAD)
     ORIGIN_HASH=$(git -C /etc/hydride/containerOS rev-parse origin/main)
     if [ "$CURRENT_HASH" != "$ORIGIN_HASH" ]; then
         # pull date of main and date of origin/main, then compare and check if origin is newer
-        CURRENT_DATE=$(git -C /etc/hydride/containerOS log -1 --format=%ct main)
+        CURRENT_DATE=$(git -C /etc/hydride/containerOS log -1 --format=%ct HEAD)
         ORIGIN_DATE=$(git -C /etc/hydride/containerOS log -1 --format=%ct origin/main)
-        if [ "$CURRENT_DATE" -gt "$ORIGIN_DATE" ]; then
+        if [ "$CURRENT_DATE" -lt "$ORIGIN_DATE" ]; then
             echo "a newer version of containerOS is available."
             prompt_update
         else
@@ -48,10 +43,9 @@ function flake() {
     cd /tmp/hcos-update/git
 
     echo "[+] building latest overlay"
-    nixos-rebuild build --flake /tmp/hcos-update/git#default
-
+    nixos-rebuild build --flake /tmp/hcos-update/git/src#default
     echo "[+] switching in-place to latest overlay"
-    nixos-rebuild switch --flake /tmp/hcos-update/git#default
+    nixos-rebuild switch --flake /tmp/hcos-update/git#/srcdefault
 }
 
 function cleanup() {
@@ -81,7 +75,7 @@ function main() {
     echo ""
     echo "in the event of containerOS failure, you can restore your previous version by running:"
     echo ""
-    echo "sudo nixos-rebuild switch --flake /hcos.old#default"
+    echo "sudo nixos-rebuild switch --flake /hcos.old/src#default"
     echo ""
     echo "note that /hcos.old is replaced on every successful run of hcos-update."
 
@@ -101,4 +95,19 @@ function prompt_update() {
     fi
 }
 
-run_diff
+if [ "$1" == "update" ]; then
+    # check if root
+    if [ "$(id -u)" != "0" ]; then
+        echo "hcos-update must be run as root." 1>&2
+        exit 1
+    fi
+
+    # check if --force is passed
+    if [ "$2" == "--force" ]; then
+        prompt_update
+    else
+        run_diff
+    fi
+else
+    usage
+fi
