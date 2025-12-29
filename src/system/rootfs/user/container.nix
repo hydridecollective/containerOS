@@ -19,6 +19,12 @@
 
   users.groups.hydride-containers = { };
 
+  system.activationScripts.container-home = {
+    text = ''
+      chown -R hydride-containers:hydride-containers /hydride
+    '';
+  };
+
   environment.systemPackages = with pkgs; [
     zsh
   ];
