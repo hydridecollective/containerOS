@@ -6,7 +6,6 @@
 
 {
   imports = [
-    ./source.nix
     ./gc.nix
   ];
 
