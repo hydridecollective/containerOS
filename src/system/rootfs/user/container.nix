@@ -5,7 +5,7 @@
 }:
 {
   users.users."hydride-containers" = {
-    isSystemUser = false;
+    isNormalUser = true;
     home = "/hydride/containers";
     createHome = true;
     extraGroups = [
