@@ -45,7 +45,7 @@ function flake() {
     echo "[+] building latest overlay"
     nixos-rebuild build --flake /tmp/hcos-update/git/src#default
     echo "[+] switching in-place to latest overlay"
-    nixos-rebuild switch --flake /tmp/hcos-update/git#/srcdefault
+    nixos-rebuild switch --flake /tmp/hcos-update/git#/src#default
 }
 
 function cleanup() {
