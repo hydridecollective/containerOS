@@ -45,14 +45,14 @@ function clean_install() {
     
     if [ "$CONFIRM_INSTALL" == "1" ]; then
         echo "aborting" 1>&2
-        exit 1
+        mainMenu
     fi
     
     echo $ROOTFS $HYDRIDE $CONFIRM_LAYOUT $CONFIRM_INSTALL
 }
 
 function mainMenu() {
-    gum choose --header "select an option" "clean installation" "in-place reinstallation"
+    gum choose --header "select an option" "clean installation" "in-place reinstallation" "quit"
 }
 
 function welcome() {
