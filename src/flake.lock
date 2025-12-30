@@ -57,14 +57,16 @@
     "hydride-overlays": {
       "inputs": {
         "flake-parts": "flake-parts",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1767086383,
-        "narHash": "sha256-zoBhuNLHPsHboXhu2KHqF4r4mgaIaXtLR1MQdtssMjg=",
+        "lastModified": 1767086906,
+        "narHash": "sha256-H4T8kTgXgod0ytBshhbsDJqZ0ns2/coL9FodKTNQHsM=",
         "ref": "refs/heads/main",
-        "rev": "8a37b13988cdcbb1e62bf999798dcca28bfa33bb",
-        "revCount": 8,
+        "rev": "64ea655ca663206e3f003a2371065764d7d11629",
+        "revCount": 10,
         "type": "git",
         "url": "https://forge.hydride.dev/infrastructure/nixpkgs-overlays.git"
       },
@@ -142,22 +144,6 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1766902085,
-        "narHash": "sha256-coBu0ONtFzlwwVBzmjacUQwj3G+lybcZ1oeNSQkgC0M=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "c0b0e0fddf73fd517c3471e546c0df87a42d53f4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs_3": {
-      "locked": {
         "lastModified": 1766885793,
         "narHash": "sha256-P6RVkrM9JLCW6xBjSwHfgTOQ1JwBUma5xe5LI8xAPC0=",
         "owner": "NixOS",
@@ -178,7 +164,7 @@
         "flake-utils": "flake-utils",
         "hydride-overlays": "hydride-overlays",
         "nixos-generators": "nixos-generators",
-        "nixpkgs": "nixpkgs_3"
+        "nixpkgs": "nixpkgs_2"
       }
     },
     "systems": {

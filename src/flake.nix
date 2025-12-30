@@ -6,7 +6,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    hydride-overlays.url = "git+https://forge.hydride.dev/infrastructure/nixpkgs-overlays.git";
+    hydride-overlays = {
+      url = "git+https://forge.hydride.dev/infrastructure/nixpkgs-overlays.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     disko.url = "github:nix-community/disko";
   };
 
@@ -23,6 +26,7 @@
     let
       systemModules = [
         disko.nixosModules.disko
+        hydride-overlays.nixosModules.overlay
         ./meta/default.nix
         ./system/default.nix
       ];

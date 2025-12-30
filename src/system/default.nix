@@ -12,8 +12,4 @@
     ./rootfs
     ./containers
   ];
-
-  nixpkgs.overlays = [
-    hydride-overlays.overlays.default
-  ];
 }
