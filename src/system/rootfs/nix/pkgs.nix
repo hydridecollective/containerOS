@@ -1,13 +1,13 @@
 {
   config,
   pkgs,
-  hydride-overlays,
+  inputs,
   ...
 }:
 
 {
   nixpkgs.overlays = [
-    hydride-overlays.overlays.default
+    inputs.hydride-overlays.overlays.default
   ];
 
   environment.systemPackages = with pkgs; [
