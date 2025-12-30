@@ -22,6 +22,7 @@
   system.activationScripts.container-home = {
     text = ''
       chown -R hydride-containers:hydride-containers /hydride
+      git config --global -add safe.directory /hydride/os-meta/hcos
     '';
   };
 
