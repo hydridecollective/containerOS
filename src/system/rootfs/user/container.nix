@@ -22,7 +22,7 @@
   system.activationScripts.container-home = {
     text = ''
       chown -R hydride-containers:hydride-containers /hydride
-      /run/current-system/sw/bin/git config --global -add safe.directory /hydride/os-meta/hcos
+      ${pkgs.git}/bin/git config --global -add safe.directory /hydride/os-meta/hcos
     '';
   };
 
