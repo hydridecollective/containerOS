@@ -12,5 +12,6 @@
     hcos-update
     hcos-generate
     hcos-shell
+    tmux
   ];
 }
