@@ -14,7 +14,7 @@
       "networkmanager"
     ];
     group = "hydride-containers";
-    shell = pkgs.zsh;
+    shell = pkgs.hcos-shell;
   };
 
   users.groups.hydride-containers = { };
@@ -25,8 +25,4 @@
       ${pkgs.git}/bin/git config --global --add safe.directory /hydride/os-meta/hcos
     '';
   };
-
-  environment.systemPackages = with pkgs; [
-    zsh
-  ];
 }
