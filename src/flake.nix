@@ -6,6 +6,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    hydride-overlays.url = "git+https://forge.hydride.dev/infrastructure/nixpkgs-overlays.git";
     disko.url = "github:nix-community/disko";
   };
 
@@ -15,6 +16,7 @@
       nixpkgs,
       flake-utils,
       nixos-generators,
+      hydride-overlays,
       disko,
       ...
     }:

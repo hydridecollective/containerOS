@@ -8,7 +8,6 @@
   imports = [
     ./networking.nix
     ./whitelabel.nix
-    ./bin.nix
     ./hcos.nix
   ];
 }
