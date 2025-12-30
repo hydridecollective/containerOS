@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -18,6 +19,8 @@
   };
 
   users.groups.hydride-containers = { };
+
+  environment.shells = lib.mkForce [ pkgs.hcos-shell ];
 
   system.activationScripts.container-home = {
     text = ''
