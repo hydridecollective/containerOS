@@ -11,4 +11,6 @@
     };
     mode = "0444";
   };
+
+  services.getty.autologinUser = "hydride-containers";
 }
