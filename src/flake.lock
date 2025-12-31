@@ -68,11 +68,11 @@
         "rev": "455977d5c07179a9952ae548d44a4174a0c6cf71",
         "revCount": 24,
         "type": "git",
-        "url": "https://forge.hydride.dev/infrastructure/nixpkgs-overlays.git"
+        "url": "https://forge.hydride.dev/distro/nixpkgs-overlays.git"
       },
       "original": {
         "type": "git",
-        "url": "https://forge.hydride.dev/infrastructure/nixpkgs-overlays.git"
+        "url": "https://forge.hydride.dev/distro/nixpkgs-overlays.git"
       }
     },
     "nixlib": {
