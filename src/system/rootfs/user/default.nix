@@ -33,7 +33,9 @@
     autosuggestions.enable = true;
     syntaxHighlighting.enable = true;
 
-    shellAliases = { };
+    shellAliases = {
+      "hcos-config" = "cd /hydride/containers/configs";
+    };
 
     histSize = 10000;
     histFile = "$HOME/.zsh_history";
