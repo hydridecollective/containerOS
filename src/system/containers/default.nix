@@ -28,6 +28,8 @@
     preferStaticEmulators = true;
   };
 
+  users.users."hydride-containers".linger = false;
+
   environment.systemPackages = with pkgs; [
     podman-compose
     slirp4netns
