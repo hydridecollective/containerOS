@@ -37,6 +37,8 @@
         modules = systemModules;
       };
 
+      defaultModules = systemModules;
+
       lib.mkHost =
         { system, modules }:
         nixpkgs.lib.nixosSystem {
