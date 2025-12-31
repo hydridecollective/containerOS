@@ -9,6 +9,7 @@
   environment.systemPackages = with pkgs; [
     zsh
     git
+    containers
     hcos-update
     hcos-generate
     hcos-shell
