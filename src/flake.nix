@@ -37,20 +37,11 @@
         modules = systemModules;
       };
 
-      nixosConfigurations.live = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./meta/default.nix
-          ./images/live/default.nix
-        ];
-      };
-
-      nixosConfigurations.minimal = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [
-          ./meta/default.nix
-          ./images/minimal/default.nix
-        ];
-      };
+      lib.mkHost =
+        { system, modules }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = modules;
+        };
     };
 }
