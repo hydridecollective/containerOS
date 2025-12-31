@@ -18,7 +18,6 @@
     shell = pkgs.hcos-shell;
 
     uid = 1000;
-    gid = 1000;
 
     subUidRanges = [
       {
@@ -34,7 +33,9 @@
     ];
   };
 
-  users.groups.hydride-containers = { };
+  users.groups.hydride-containers = {
+    gid = 1000;
+  };
 
   environment.shells = lib.mkForce [ pkgs.hcos-shell ];
 
