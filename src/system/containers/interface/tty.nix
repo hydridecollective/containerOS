@@ -8,6 +8,7 @@
   environment.etc."issue" = {
     source = pkgs.replaceVars ./resources/issue {
       CONTAINEROS_VERSION = config.hydride.containers.version.id;
+      CONTAINEROS_CODENAME = config.hydride.containers.version.codename;
     };
     mode = "0444";
   };
