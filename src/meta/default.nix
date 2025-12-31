@@ -25,7 +25,7 @@ with lib;
       pull = {
         repository = mkOption {
           type = types.str;
-          default = "https://forge.hydride.dev/infrastructure/containerOS.git";
+          default = "https://forge.hydride.dev/distro/containerOS.git";
           description = "pull this git repository on image boot/build";
         };
         revision = mkOption {
@@ -42,7 +42,7 @@ with lib;
       codename = "Orca";
     };
     images.pull = {
-      repository = "https://forge.hydride.dev/infrastructure/containerOS.git";
+      repository = "https://forge.hydride.dev/distro/containerOS.git";
       revision = "39899b183a3336351dd2156de1daeee6ae4a5b64";
     };
   };

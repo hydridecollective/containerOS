@@ -18,7 +18,7 @@ with lib;
       extraOSReleaseArgs = lib.mkOption {
         apply = _: {
           CONTAINEROS_VERSION = config.hydride.containers.version.id;
-          HOME_URL = "https://forge.hydride.dev/infrastructure/containerOS";
+          HOME_URL = "https://forge.hydride.dev/distro/containerOS";
           VENDOR_URL = "https://hydride.dev";
         };
       };

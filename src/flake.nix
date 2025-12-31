@@ -7,7 +7,7 @@
     };
     flake-utils.url = "github:numtide/flake-utils";
     hydride-overlays = {
-      url = "git+https://forge.hydride.dev/infrastructure/nixpkgs-overlays.git";
+      url = "git+https://forge.hydride.dev/distro/nixpkgs-overlays.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko.url = "github:nix-community/disko";
