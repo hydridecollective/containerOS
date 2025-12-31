@@ -17,6 +17,9 @@
     group = "hydride-containers";
     shell = pkgs.hcos-shell;
 
+    uid = 1000;
+    gid = 1000;
+
     subUidRanges = [
       {
         startUid = 100000;
