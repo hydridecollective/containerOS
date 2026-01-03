@@ -62,11 +62,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1767426220,
-        "narHash": "sha256-IZfOLKY0KtMPT4D2t07neI0eUDh0sOL9Rxqaofwmrbo=",
+        "lastModified": 1767426317,
+        "narHash": "sha256-PXUTLK12TsPpWHPzXktuU6Wkgm+Kcl21ZQOYGqqQLPw=",
         "ref": "refs/heads/main",
-        "rev": "0228ed65089ba306e18683abd8f3d8087551bd30",
-        "revCount": 44,
+        "rev": "9200dc59030a8c0c65da8a6d52270690c4a3f7a1",
+        "revCount": 45,
         "type": "git",
         "url": "https://forge.hydride.dev/distro/nixpkgs-overlays.git"
       },
