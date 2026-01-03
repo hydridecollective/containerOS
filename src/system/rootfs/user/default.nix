@@ -34,7 +34,7 @@
     syntaxHighlighting.enable = true;
 
     shellAliases = {
-      "hcos-config" = "cd /hydride/containers/configs";
+      "hcos-config" = "cd /hydride/containers";
     };
 
     histSize = 10000;

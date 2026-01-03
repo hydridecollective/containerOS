@@ -42,6 +42,7 @@
   system.activationScripts.container-home = {
     text = ''
       mkdir -p /hydride/containers/configs
+      mkdir -p /hydride/containers/stacks
       chown -R hydride-containers:hydride-containers /hydride
       HOME=/hydride/containers ${pkgs.git}/bin/git config --global --add safe.directory /hydride/os-meta/hcos
       HOME=/root ${pkgs.git}/bin/git config --global --add safe.directory /hydride/os-meta/hcos
