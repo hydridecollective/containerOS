@@ -9,16 +9,16 @@
   systemd.services.container-autostart = {
     enable = true;
     after = [
-      "podman.service"
+      "multi-user.target"
       "network-online.target"
     ];
     wants = [ "network-online.target" ];
-    requires = [ "podman.service" ];
+    wantedBy = [ "multi-user.target" ];
     description = "Automatically start containers with --restart=always tag";
     serviceConfig = {
       Type = "idle";
       User = "hydride-containers";
-      ExecStartPre = ''${pkgs.coreutils}/bin/sleep 1'';
+      ExecStartPre = ''${pkgs.coreutils}/bin/sleep 10'';
       ExecStart = ''/run/current-system/sw/bin/podman start --all --filter restart-policy=always'';
     };
   };
