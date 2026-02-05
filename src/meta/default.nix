@@ -38,8 +38,8 @@ with lib;
 
   config.hydride.containers = {
     version = {
-      id = "0.1.0";
-      codename = "Orca";
+      id = "0.2.0";
+      codename = "Manatee";
     };
     images.pull = {
       repository = "https://forge.hydride.dev/distro/containerOS.git";
