@@ -15,7 +15,7 @@ with lib;
   # ssh
   services.openssh = {
     settings = {
-      PermitRootLogin = false;
+      PermitRootLogin = "no";
       PasswordAuthentication = false;
       KbdInteractiveAuthentication = false;
     };
