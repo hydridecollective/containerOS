@@ -8,8 +8,12 @@
   # kudos to "https://discourse.nixos.org/t/rootless-podman-compose-configuration/52523/4"
   systemd.services.container-autostart = {
     enable = true;
-    after = [ "podman.service" ];
-    wantedBy = [ "multi-user.target" ];
+    after = [
+      "podman.service"
+      "network-online.target"
+    ];
+    wants = [ "network-online.target" ];
+    requires = [ "podman.service" ];
     description = "Automatically start containers with --restart=always tag";
     serviceConfig = {
       Type = "idle";
